@@ -11,6 +11,7 @@ import ch.bbzbl_it.module_306_backend.service.AttachmentService;
 import jakarta.websocket.server.PathParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
@@ -47,7 +48,7 @@ public class CommentController {
         return new ResponseEntity<>(comments.stream().map(comment -> CommentDTO.toDTO(comment, attachments)).toList(), HttpStatus.OK);
     }
 
-    @PostMapping("/{ticketId}")
+    @PostMapping(path = "/{ticketId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<CommentDTO> createComment(
             @PathParam("ticketId") Long ticketId,
             @RequestPart("files") MultipartFile[] attachments,
@@ -67,7 +68,7 @@ public class CommentController {
         }
     }
 
-    @PutMapping("/{id}")
+    @PutMapping(path = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<CommentDTO> updateComment(
             @PathVariable("id") Long id,
             @RequestPart("files") MultipartFile[] attachments,

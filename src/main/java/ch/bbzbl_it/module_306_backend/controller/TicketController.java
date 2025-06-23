@@ -13,6 +13,7 @@ import ch.bbzbl_it.module_306_backend.repository.UserRepository;
 import ch.bbzbl_it.module_306_backend.service.AttachmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
@@ -61,7 +62,7 @@ public class TicketController {
         return new ResponseEntity<>(ticketRepository.findAll().stream().map(ticket -> TicketDTO.toDTO(ticket, null, null)).toList(), HttpStatus.OK);
     }
 
-    @PostMapping("")
+    @PostMapping(path = "", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<TicketDTO> createTicket(
             @RequestPart("files") MultipartFile[] attachments,
             @RequestPart("ticket") TicketDTO ticketDTO
@@ -79,7 +80,7 @@ public class TicketController {
         }
     }
 
-    @PutMapping("/{id}")
+    @PutMapping(path = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<TicketDTO> updateTicket(
             @PathVariable("id") Long id,
             @RequestPart("files") MultipartFile[] attachments,
