@@ -63,8 +63,8 @@ public class TicketController {
 
     @PostMapping("")
     public ResponseEntity<TicketDTO> createTicket(
-            @RequestParam("files") MultipartFile[] attachments,
-            @RequestBody TicketDTO ticketDTO
+            @RequestPart("files") MultipartFile[] attachments,
+            @RequestPart("ticket") TicketDTO ticketDTO
     ) {
         try {
             if (ticketDTO == null) {
@@ -82,8 +82,8 @@ public class TicketController {
     @PutMapping("/{id}")
     public ResponseEntity<TicketDTO> updateTicket(
             @PathVariable("id") Long id,
-            @RequestParam("files") MultipartFile[] attachments,
-            @RequestBody TicketDTO ticketDTO
+            @RequestPart("files") MultipartFile[] attachments,
+            @RequestPart("ticket") TicketDTO ticketDTO
     ) {
         try {
             if (ticketDTO == null || ticketDTO.getModifiedBy() == null) {

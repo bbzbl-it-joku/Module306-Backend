@@ -50,7 +50,7 @@ public class CommentController {
     @PostMapping("/{ticketId}")
     public ResponseEntity<CommentDTO> createComment(
             @PathParam("ticketId") Long ticketId,
-            @RequestParam("files") MultipartFile[] attachments,
+            @RequestPart("files") MultipartFile[] attachments,
             @RequestPart("comment") CommentDTO commentDTO
     ) {
         try {
@@ -70,7 +70,7 @@ public class CommentController {
     @PutMapping("/{id}")
     public ResponseEntity<CommentDTO> updateComment(
             @PathVariable("id") Long id,
-            @RequestParam("files") MultipartFile[] attachments,
+            @RequestPart("files") MultipartFile[] attachments,
             @RequestPart("comment") CommentDTO commentDTO
     ) {
         try {
@@ -89,7 +89,6 @@ public class CommentController {
             } else {
                 result = saveComment(commentDTO, id);
             }
-            attachments[0].getName();
             List<Attachment> savedAttachments = attachmentService.saveAllAttachments(commentDTO.getAttachments(), attachments, result.getId(), "COMMENT");
 
             return new ResponseEntity<>(CommentDTO.toDTO(result, savedAttachments), HttpStatus.OK);
