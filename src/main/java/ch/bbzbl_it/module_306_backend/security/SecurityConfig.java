@@ -2,6 +2,7 @@ package ch.bbzbl_it.module_306_backend.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -26,6 +27,9 @@ public class SecurityConfig {
                 .sessionManagement(management -> management.sessionCreationPolicy(SessionCreationPolicy.ALWAYS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/unauthenticated", "/oauth2/**", "/login/**").permitAll()
+                        .requestMatchers(HttpMethod.POST).hasAnyRole("ADMIN", "WRITE")
+                        .requestMatchers(HttpMethod.PUT).hasAnyRole("ADMIN", "WRITE")
+                        .requestMatchers(HttpMethod.DELETE).hasAnyRole("ADMIN", "WRITE")
                         .anyRequest().fullyAuthenticated()
                 )
                 .logout(logout -> logout.logoutSuccessUrl("http://localhost:8081/realms/external/protocol/openid-connect/logout?redirect_uri=http://localhost:8080/"));

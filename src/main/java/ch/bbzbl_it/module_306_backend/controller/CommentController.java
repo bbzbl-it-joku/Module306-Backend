@@ -8,6 +8,7 @@ import ch.bbzbl_it.module_306_backend.repository.AttachmentRepository;
 import ch.bbzbl_it.module_306_backend.repository.CommentRepository;
 import ch.bbzbl_it.module_306_backend.repository.UserRepository;
 import ch.bbzbl_it.module_306_backend.service.AttachmentService;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.websocket.server.PathParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -81,7 +82,11 @@ public class CommentController {
 
             Optional<Comment> commentOptional = commentRepository.findById(commentDTO.getId());
             Comment result;
-            if (commentOptional.isPresent()) {
+            if (commentOptional.isPresent() &&
+                    commentOptional.get().getCreatedBy().getUsername().equals(
+                            SecurityContextHolder.getContext().getAuthentication().getName()
+                    )
+            ) {
                 var commentToSave = commentOptional.get();
                 commentToSave.setContent(commentDTO.getContent());
                 commentToSave.setModifiedAt(Instant.now());
