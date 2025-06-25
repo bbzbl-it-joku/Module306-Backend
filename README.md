@@ -1,7 +1,12 @@
 # Module306-Backend
 
 ````shell
-docker run -p 5432:5432 -v .\init.sql:/docker-entrypoint-initdb.d/init.sql --name postgres --env POSTGRES_USER=user --env POSTGRES_PASSWORD=password postgres
+docker run -p 5432:5432 --name postgres --env POSTGRES_USER=user --env POSTGRES_PASSWORD=password postgres
+````
+
+After creation of the database you have to create the database "trackify"
+````sql
+CREATE DATABASE trackify
 ````
 
 ````shell

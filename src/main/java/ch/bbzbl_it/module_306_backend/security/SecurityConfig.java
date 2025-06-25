@@ -6,6 +6,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
@@ -22,14 +23,17 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain configure(HttpSecurity http) throws Exception {
         http
+                .csrf(AbstractHttpConfigurer::disable)
+//                // .csrf(Customizer.withDefaults())
+                .cors(Customizer.withDefaults())
                 .oauth2Client(Customizer.withDefaults())
                 .oauth2Login(oauth2Login -> oauth2Login.tokenEndpoint(Customizer.withDefaults()).userInfoEndpoint(Customizer.withDefaults()))
                 .sessionManagement(management -> management.sessionCreationPolicy(SessionCreationPolicy.ALWAYS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/unauthenticated", "/oauth2/**", "/login/**").permitAll()
-                        .requestMatchers(HttpMethod.POST).hasAnyRole("ADMIN", "WRITE")
-                        .requestMatchers(HttpMethod.PUT).hasAnyRole("ADMIN", "WRITE")
-                        .requestMatchers(HttpMethod.DELETE).hasAnyRole("ADMIN", "WRITE")
+//                        .requestMatchers("/unauthenticated", "/oauth2/**", "/login/**").permitAll()
+//                        .requestMatchers(HttpMethod.POST).hasAnyRole("ADMIN", "WRITE")
+//                        .requestMatchers(HttpMethod.PUT).hasAnyRole("ADMIN", "WRITE")
+//                        .requestMatchers(HttpMethod.DELETE).hasAnyRole("ADMIN", "WRITE")
                         .anyRequest().fullyAuthenticated()
                 )
                 .logout(logout -> logout.logoutSuccessUrl("http://localhost:8081/realms/external/protocol/openid-connect/logout?redirect_uri=http://localhost:8080/"));
@@ -78,7 +82,7 @@ public class SecurityConfig {
         config.setAllowCredentials(true);
         config.setAllowedOrigins(List.of("http://localhost:8080")); // Frontend URL
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        config.setAllowedHeaders(List.of("Authorization", "Cache-Control", "Content-Type", "X-CSRF-TOKEN"));
+//        config.setAllowedHeaders(List.of("Authorization", "Cache-Control", "Content-Type", "X-CSRF-TOKEN"));
         source.registerCorsConfiguration("/**", config);
         return new CorsFilter(source);
     }
